@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/ddvzwzjm/xmlseclibs.svg?branch=master)](https://travis-ci.org/ddvzwzjm/xmlseclibs)
+[![Coverage Status](https://coveralls.io/repos/ddvzwzjm/xmlseclibs/badge.svg)](https://coveralls.io/r/ddvzwzjm/xmlseclibs)
 
 
 xmlseclibs is a library written in PHP for working with XML Encryption and Signatures.
