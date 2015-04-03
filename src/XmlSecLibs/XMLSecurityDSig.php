@@ -85,6 +85,8 @@ class XMLSecurityDSig {
         $this->sigNode = $sigdoc->documentElement;
     }
 
+
+
     private function resetXPathObj() {
         $this->xPathCtx = NULL;
     }
@@ -180,14 +182,7 @@ class XMLSecurityDSig {
                 $withComments = TRUE;
                 break;
         }
-/* Support PHP versions < 5.2 not containing C14N methods in DOM extension */
-        $php_version = explode('.', PHP_VERSION);
-        if (($php_version[0] < 5) || ($php_version[0] == 5 && $php_version[1] < 2) ) {
-            if (! is_null($arXPath)) {
-                throw new Exception("PHP 5.2.0 or higher is required to perform XPath Transformations");
-            }
-            return C14NGeneral($node, $exclusive, $withComments);
-        }
+
         return $node->C14N($exclusive, $withComments, $arXPath, $prefixList);
     }
 
@@ -808,4 +803,5 @@ class XMLSecurityDSig {
     public function getValidatedNodes() {
         return $this->validatedNodes;
     }
+
 }

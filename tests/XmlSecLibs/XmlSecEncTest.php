@@ -272,6 +272,7 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
     public function verifyProvider()
     {
         return [
+            /* [$testName, $testFile] */
             ['SIGN_TEST', dirname(__FILE__) . '/../sign-basic-test.xml'],
             // ['SIGN_TEST_RSA_SHA256', dirname(__FILE__) . '/../sign-sha256-rsa-sha256-test.xml'] // There is no such file in tests folder
         ];
@@ -309,7 +310,7 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
         $objKeyInfo = XMLSecEnc::staticLocateKeyInfo($objKey, $objDSig);
 
         if (!$objKeyInfo->key && empty( $key )) {
-            $objKey->loadKey(dirname(__FILE__) . '/mycert.pem', true);
+            $objKey->loadKey(dirname(__FILE__) . '/../mycert.pem', true);
         }
 
         $this->assertEquals(1, $objXMLSecDSig->verify($objKey), "$testName: Signature is invalid");
