@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/ddvzwzjm/xmlseclibs.svg?branch=master)](https://travis-ci.org/ddvzwzjm/xmlseclibs)
+
+
 xmlseclibs is a library written in PHP for working with XML Encryption and Signatures.
 
 xmlseclibs requires PHP version 5 or greater.
