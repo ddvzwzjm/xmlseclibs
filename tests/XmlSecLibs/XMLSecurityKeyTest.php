@@ -48,12 +48,12 @@ class XMLSecurityKeyTest extends \PHPUnit_Framework_TestCase
 
     public function symmetricKeySizeProvider()
     {
-        return [
-            [XMLSecurityKey::TRIPLEDES_CBC, 24],
-            [XMLSecurityKey::AES128_CBC, 16],
-            [XMLSecurityKey::AES192_CBC, 24],
-            [XMLSecurityKey::AES256_CBC, 32]
-        ];
+        return array(
+            array(XMLSecurityKey::TRIPLEDES_CBC, 24),
+            array(XMLSecurityKey::AES128_CBC, 16),
+            array(XMLSecurityKey::AES192_CBC, 24),
+            array(XMLSecurityKey::AES256_CBC, 32)
+        );
     }
 
     /**

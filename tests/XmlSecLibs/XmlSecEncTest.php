@@ -120,18 +120,18 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
      */
     public function decryptFilesProvider()
     {
-        return [
-            [
+        return array(
+            array(
                 'AOESP_SHA1',
                 dirname(__FILE__) . '/../oaep_sha1-res.xml',
                 dirname(__FILE__) . "/../privkey.pem"
-            ],
-            [
+            ),
+            array(
                 'AOESP_SHA1_CONTENT',
                 dirname(__FILE__) . '/../oaep_sha1-content-res.xml',
                 dirname(__FILE__) . "/../privkey.pem"
-            ]
-        ];
+            )
+        );
     }
 
     /**
@@ -203,10 +203,10 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
      */
     public function encryptProvider()
     {
-        return [
-            [XMLSecEnc::Element, 'EncryptedData'],
-            [XMLSecEnc::Content, 'Root']
-        ];
+        return array(
+            array(XMLSecEnc::Element, 'EncryptedData'),
+            array(XMLSecEnc::Content, 'Root')
+        );
     }
 
     /**
@@ -271,11 +271,11 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
      */
     public function verifyProvider()
     {
-        return [
+        return array(
             /* [$testName, $testFile] */
-            ['SIGN_TEST', dirname(__FILE__) . '/../sign-basic-test.xml'],
+            array('SIGN_TEST', dirname(__FILE__) . '/../sign-basic-test.xml'),
             // ['SIGN_TEST_RSA_SHA256', dirname(__FILE__) . '/../sign-sha256-rsa-sha256-test.xml'] // There is no such file in tests folder
-        ];
+        );
     }
 
     /**

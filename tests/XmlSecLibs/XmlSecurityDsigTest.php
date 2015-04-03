@@ -111,35 +111,35 @@ class XmlSecurityDsigTest extends \PHPUnit_Framework_TestCase
 
     public function testXmlSignProvider()
     {
-        return [
-            [XMLSecurityDSig::SHA1, XMLSecurityKey::RSA_SHA1, dirname(__FILE__) . '/../sign-basic-test.res'],
-            [
+        return array(
+            array(XMLSecurityDSig::SHA1, XMLSecurityKey::RSA_SHA1, dirname(__FILE__) . '/../sign-basic-test.res'),
+            array(
                 XMLSecurityDSig::SHA256,
                 XMLSecurityKey::RSA_SHA256,
                 dirname(__FILE__) . '/../sign-sha256-rsa-sha256-test.res'
-            ],
-            [
+            ),
+            array(
                 XMLSecurityDSig::SHA384,
                 XMLSecurityKey::RSA_SHA384,
                 dirname(__FILE__) . '/../sign-sha384-rsa-sha384-test.res'
-            ],
-            [
+            ),
+            array(
                 XMLSecurityDSig::SHA512,
                 XMLSecurityKey::RSA_SHA512,
                 dirname(__FILE__) . '/../sign-sha512-rsa-sha512-test.res'
-            ],
-            [
+            ),
+            array(
                 XMLSecurityDSig::RIPEMD160,
                 XMLSecurityKey::RSA_1_5,
                 dirname(__FILE__) . '/../sign-ripemd160-rsa-1_5-test.res'
-            ],
-            [
+            ),
+            array(
                 XMLSecurityDSig::SHA256,
                 XMLSecurityKey::RSA_OAEP_MGF1P,
                 dirname(__FILE__) . '/../sign-sha256-rsa-oaep-mgf1p-test.res'
-            ],
+            ),
 
-        ];
+        );
     }
 
     /**
