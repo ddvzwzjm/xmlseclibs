@@ -15,12 +15,13 @@ Mailing List: https://groups.google.com/forum/#!forum/xmlseclibs
 ```
 ## What's new?
 
-1. PSR-0 compatible
-2. *Stable* Composer package available `composer require ddvzwzjm/xmlseclibs`
-3. PHPUnit instead of ancient .phpt
-4. Travis CI and Code Coverage
-5. Examples (tbd)
-6. Docs (tbd)
+1. Only PHP 5.3+, no 5.0 legacy
+2. PSR-0 compatible
+3. *Stable* Composer package available `composer require ddvzwzjm/xmlseclibs`
+4. PHPUnit instead of ancient .phpt
+5. Travis CI and better Code Coverage (67% vs 53%)
+6. Examples (tbd)
+7. Docs (tbd)
 
 ## PHPUnit Tests
 
