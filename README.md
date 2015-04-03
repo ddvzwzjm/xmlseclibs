@@ -7,3 +7,8 @@ The author of xmlseclibs is Rob Richards.
 xmlseclibs is being used in many different software, one of them is simpleSAMLphp. 
 
 Mailing List: https://groups.google.com/forum/#!forum/xmlseclibs
+
+# TEST
+
+To run tests
+vendor/bin/phpunit -c phpunit.xml.dist
