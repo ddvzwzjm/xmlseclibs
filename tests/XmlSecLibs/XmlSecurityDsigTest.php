@@ -108,37 +108,45 @@ class XmlSecurityDsigTest extends \PHPUnit_Framework_TestCase
          */
     }
 
-    public function testXmlSign()
+
+    public function testXmlSignProvider()
     {
-        $doc = new \DOMDocument();
-        $doc->load(dirname(__FILE__) . '/../basic-doc.xml');
+        return [
+            [XMLSecurityDSig::SHA1, XMLSecurityKey::RSA_SHA1, dirname(__FILE__) . '/../sign-basic-test.res'],
+            [
+                XMLSecurityDSig::SHA256,
+                XMLSecurityKey::RSA_SHA256,
+                dirname(__FILE__) . '/../sign-sha256-rsa-sha256-test.res'
+            ],
+            [
+                XMLSecurityDSig::SHA384,
+                XMLSecurityKey::RSA_SHA384,
+                dirname(__FILE__) . '/../sign-sha384-rsa-sha384-test.res'
+            ],
+            [
+                XMLSecurityDSig::SHA512,
+                XMLSecurityKey::RSA_SHA512,
+                dirname(__FILE__) . '/../sign-sha512-rsa-sha512-test.res'
+            ],
+            [
+                XMLSecurityDSig::RIPEMD160,
+                XMLSecurityKey::RSA_1_5,
+                dirname(__FILE__) . '/../sign-ripemd160-rsa-1_5-test.res'
+            ],
+            [
+                XMLSecurityDSig::SHA256,
+                XMLSecurityKey::RSA_OAEP_MGF1P,
+                dirname(__FILE__) . '/../sign-sha256-rsa-oaep-mgf1p-test.res'
+            ],
 
-        $objDSig = new XMLSecurityDSig();
-
-        $objDSig->setCanonicalMethod(XMLSecurityDSig::EXC_C14N);
-
-        $objDSig->addReference($doc, XMLSecurityDSig::SHA1, array('http://www.w3.org/2000/09/xmldsig#enveloped-signature'));
-
-        $objKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA1, array('type' => 'private'));
-        /* load private key */
-        $objKey->loadKey(dirname(__FILE__) . '/../privkey.pem', true);
-
-        /* if key has Passphrase, set it using $objKey->passphrase = <passphrase> " */
-
-
-        $objDSig->sign($objKey);
-
-        /* Add associated public key */
-        $objDSig->add509Cert(file_get_contents(dirname(__FILE__) . '/../mycert.pem'));
-
-        $objDSig->appendSignature($doc->documentElement);
-
-        $sign_output     = $doc->saveXML();
-        $sign_output_def = file_get_contents(dirname(__FILE__) . '/../sign-basic-test.res');
-        $this->assertEquals($sign_output_def, $sign_output, "Signature doesn't match");
+        ];
     }
 
-    public function testXmlSign_SHA256_RSA_SHA256()
+    /**
+     * @dataProvider testXmlSignProvider
+     * @throws \Exception
+     */
+    public function testXmlSign($dsigAlgorithm, $keyType, $expectedFileName)
     {
         $doc = new \DOMDocument();
         $doc->load(dirname(__FILE__) . '/../basic-doc.xml');
@@ -147,22 +155,24 @@ class XmlSecurityDsigTest extends \PHPUnit_Framework_TestCase
 
         $objDSig->setCanonicalMethod(XMLSecurityDSig::EXC_C14N);
 
-        $objDSig->addReference($doc, XMLSecurityDSig::SHA256, array('http://www.w3.org/2000/09/xmldsig#enveloped-signature'));
+        $objDSig->addReference($doc, $dsigAlgorithm, array('http://www.w3.org/2000/09/xmldsig#enveloped-signature'));
 
-        $objKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA256, array('type' => 'private'));
+        $objKey = new XMLSecurityKey($keyType, array('type' => 'private'));
         /* load private key */
         $objKey->loadKey(dirname(__FILE__) . '/../privkey.pem', true);
 
         /* if key has Passphrase, set it using $objKey->passphrase = <passphrase> " */
 
+
         $objDSig->sign($objKey);
 
         /* Add associated public key */
         $objDSig->add509Cert(file_get_contents(dirname(__FILE__) . '/../mycert.pem'));
+
         $objDSig->appendSignature($doc->documentElement);
 
         $sign_output     = $doc->saveXML();
-        $sign_output_def = file_get_contents(dirname(__FILE__) . '/../sign-sha256-rsa-sha256-test.res');
+        $sign_output_def = file_get_contents($expectedFileName);
         $this->assertEquals($sign_output_def, $sign_output, "Signature doesn't match");
     }
 

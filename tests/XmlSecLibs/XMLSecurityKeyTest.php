@@ -46,24 +46,28 @@ class XMLSecurityKeyTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testGetSymmetricKeySize()
+    public function symmetricKeySizeProvider()
     {
-        $keysizes = array(
-            XMLSecurityKey::TRIPLEDES_CBC => 24,
-            XMLSecurityKey::AES128_CBC    => 16,
-            XMLSecurityKey::AES192_CBC    => 24,
-            XMLSecurityKey::AES256_CBC    => 32,
-        );
+        return [
+            [XMLSecurityKey::TRIPLEDES_CBC, 24],
+            [XMLSecurityKey::AES128_CBC, 16],
+            [XMLSecurityKey::AES192_CBC, 24],
+            [XMLSecurityKey::AES256_CBC, 32]
+        ];
+    }
 
-        foreach ($keysizes as $type => $keysize) {
-            $key  = new XMLSecurityKey($type);
-            $size = $key->getSymmetricKeySize();
-            $this->assertEquals(
-                $keysize,
-                $size,
-                sprintf("Invalid keysize for key type %s. Was %d, should have been %d.", $type, $size, $keysize)
-            );
-        }
+    /**
+     * @dataProvider symmetricKeySizeProvider
+     */
+    public function testGetSymmetricKeySize($keyType, $keySize)
+    {
+        $key  = new XMLSecurityKey($keyType);
+        $size = $key->getSymmetricKeySize();
+        $this->assertEquals(
+            $keySize,
+            $size,
+            sprintf("Invalid keysize for key type %s. Was %d, should have been %d.", $keyType, $size, $keySize)
+        );
     }
 
     public function testThumbPrint()

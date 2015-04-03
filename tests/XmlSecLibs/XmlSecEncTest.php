@@ -121,7 +121,11 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
     public function decryptFilesProvider()
     {
         return [
-            ['AOESP_SHA1', dirname(__FILE__) . '/../oaep_sha1-res.xml', dirname(__FILE__) . "/../privkey.pem"],
+            [
+                'AOESP_SHA1',
+                dirname(__FILE__) . '/../oaep_sha1-res.xml',
+                dirname(__FILE__) . "/../privkey.pem"
+            ],
             [
                 'AOESP_SHA1_CONTENT',
                 dirname(__FILE__) . '/../oaep_sha1-content-res.xml',
@@ -131,7 +135,7 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * TODO: replace array with provider
+     *
      * @@dataProvider decryptFilesProvider
      * @throws \Exception
      */
