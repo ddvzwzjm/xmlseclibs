@@ -1,5 +1,5 @@
 {
-  "name": "ddvzwzjm/xmllseclibs",
+  "name": "ddvzwzjm/xmlseclibs",
   "type": "library",
   "description": "XmlSecLibs (latest fork of original repo)",
   "keywords": ["scoring", "loans", "api"],
@@ -23,6 +23,7 @@
     }
   },
   "require-dev": {
-    "phpunit/phpunit": "~4.5"
+    "phpunit/phpunit": "~4.5",
+    "satooshi/php-coveralls": "dev-master"
   }
 }
