@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/ddvzwzjm/xmlseclibs.svg?branch=master)](https://travis-ci.org/ddvzwzjm/xmlseclibs)
 [![Coverage Status](https://coveralls.io/repos/ddvzwzjm/xmlseclibs/badge.svg)](https://coveralls.io/r/ddvzwzjm/xmlseclibs)
+[![Latest Stable Version](https://poser.pugx.org/ddvzwzjm/xmlseclibs/v/stable.svg)](https://packagist.org/packages/ddvzwzjm/xmlseclibs)
 
 # XMLSecLibs 
 
