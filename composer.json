@@ -2,7 +2,7 @@
   "name": "ddvzwzjm/xmlseclibs",
   "type": "library",
   "description": "XmlSecLibs (latest fork of original repo)",
-  "keywords": ["scoring", "loans", "api"],
+  "keywords": ["encryption", "xml", "security"],
   "homepage": "http://github.com/ddvzwzjm/xmllseclibs",
   "license": "BSD",
   "authors": [
