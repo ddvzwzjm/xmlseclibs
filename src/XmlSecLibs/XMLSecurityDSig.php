@@ -2,7 +2,7 @@
 /**
  * xmlseclibs.php
  *
- * Copyright (c) 2007-2013, Robert Richards <rrichards@cdatazone.org>.
+ * Copyright (c) 2007-2015, Robert Richards <rrichards@cdatazone.org>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @author     Robert Richards <rrichards@cdatazone.org>
- * @copyright  2007-2013 Robert Richards <rrichards@cdatazone.org>
+ * @copyright  2007-2015 Robert Richards <rrichards@cdatazone.org>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    1.3.2-dev
  */
@@ -263,6 +263,25 @@ class XMLSecurityDSig
                 $exclusive    = true;
                 $withComments = true;
                 break;
+        }
+
+        if (
+            is_null($arXPath) &&
+            ($node instanceof DOMNode) &&
+            ($node->ownerDocument !== null) &&
+            $node->isSameNode($node->ownerDocument->documentElement)
+        ) {
+            /* Check for any PI or comments as they would have been excluded */
+            $element = $node;
+            while ($refnode = $element->previousSibling) {
+                if ($refnode->nodeType == XML_PI_NODE || (($refnode->nodeType == XML_COMMENT_NODE) && $withComments)) {
+                    break;
+                }
+                $element = $refnode;
+            }
+            if ($refnode == null) {
+                $node = $node->ownerDocument;
+            }
         }
 
         return $node->C14N($exclusive, $withComments, $arXPath, $prefixList);
