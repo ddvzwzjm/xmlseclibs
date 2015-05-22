@@ -108,6 +108,18 @@ class XmlSecurityDsigTest extends \PHPUnit_Framework_TestCase
          */
     }
 
+    public function testWithCommentIdUriObject()
+    {
+        $doc = new \DOMDocument();
+        $doc->load(dirname(__FILE__) . '/../withcomment-id-uri-object.xml');
+        $objXMLSecDSig = new XMLSecurityDSig();
+        $objXMLSecDSig->idKeys = array('xml:id');
+        $objDSig = $objXMLSecDSig->locateSignature($doc);
+        $this->assertInstanceOf('\\DomElement', $objDSig, "Cannot locate Signature Node");
+
+        $retVal = $objXMLSecDSig->validateReference();
+        $this->assertTrue($retVal, "Reference Validation Failed");
+    }
 
     public function testXmlSignProvider()
     {
