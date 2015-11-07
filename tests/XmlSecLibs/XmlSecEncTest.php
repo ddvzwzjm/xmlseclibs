@@ -1,9 +1,9 @@
 <?php
+
 namespace XmlSecLibs;
 
 /**
- * Class XmlSecEncTest
- * @package XmlSecLibs
+ * Class XmlSecEncTest.
  */
 class XmlSecEncTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,13 +21,13 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
     public function testEncryptedDataNodeOrder()
     {
         $dom = new \DOMDocument();
-        $dom->load(dirname(__FILE__) . '/../basic-doc.xml');
+        $dom->load(dirname(__FILE__).'/../basic-doc.xml');
 
         $objKey = new XMLSecurityKey(XMLSecurityKey::AES256_CBC);
         $objKey->generateSessionKey();
 
-        $siteKey = new XMLSecurityKey(XMLSecurityKey::RSA_OAEP_MGF1P, array('type' => 'public'));
-        $siteKey->loadKey(dirname(__FILE__) . '/../mycert.pem', true, true);
+        $siteKey = new XMLSecurityKey(XMLSecurityKey::RSA_OAEP_MGF1P, ['type' => 'public']);
+        $siteKey->loadKey(dirname(__FILE__).'/../mycert.pem', true, true);
 
         $enc = new XMLSecEnc();
         $enc->setNode($dom->documentElement);
@@ -36,16 +36,16 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
         $enc->type = XMLSecEnc::Content;
         $encNode   = $enc->encryptNode($objKey);
 
-        $nodeOrder = array(
+        $nodeOrder = [
             'EncryptionMethod',
             'KeyInfo',
             'CipherData',
             'EncryptionProperties',
-        );
+        ];
 
         $prevNode = 0;
         for ($node = $encNode->firstChild; $node !== null; $node = $node->nextSibling) {
-            if (!( $node instanceof \DOMElement )) {
+            if (!($node instanceof \DOMElement)) {
                 /* Skip comment and text nodes. */
                 continue;
             }
@@ -74,8 +74,7 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
     public function testGetCipherData()
     {
         $doc = new \DOMDocument();
-        $doc->load(dirname(__FILE__) . '/../oaep_sha1-res.xml');
-
+        $doc->load(dirname(__FILE__).'/../oaep_sha1-res.xml');
 
         $objenc  = new XMLSecEnc();
         $encData = $objenc->locateEncryptedData($doc);
@@ -83,7 +82,6 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
 
         $ciphervalue = $objenc->getCipherValue();
         $this->assertEquals('e3b188c5a139655d14d3f7a1e6477bc3', md5($ciphervalue));
-
 
         $objKey       = $objenc->locateKey();
         $objKeyInfo   = $objenc->locateKeyInfo($objKey);
@@ -99,14 +97,14 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
     public function testRetrievalMethodFindKey()
     {
         $doc = new \DOMDocument();
-        $doc->load(dirname(__FILE__) . "/../retrievalmethod-findkey.xml");
+        $doc->load(dirname(__FILE__).'/../retrievalmethod-findkey.xml');
 
         $objenc  = new XMLSecEnc();
         $encData = $objenc->locateEncryptedData($doc);
-        $this->assertNotEmpty($encData, "Cannot locate Encrypted Data");
+        $this->assertNotEmpty($encData, 'Cannot locate Encrypted Data');
 
         $objenc->setNode($encData);
-        $objenc->type = $encData->getAttribute("Type");
+        $objenc->type = $encData->getAttribute('Type');
         $objKey       = $objenc->locateKey();
 
         $objKeyInfo = $objenc->locateKeyInfo($objKey);
@@ -114,29 +112,28 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($objKeyInfo->isEncrypted, 'Expected $objKeyInfo to refer to an encrypted key by now.');
     }
 
-
     /**
      * @return array
      */
     public function decryptFilesProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 'AOESP_SHA1',
-                dirname(__FILE__) . '/../oaep_sha1-res.xml',
-                dirname(__FILE__) . "/../privkey.pem"
-            ),
-            array(
+                dirname(__FILE__).'/../oaep_sha1-res.xml',
+                dirname(__FILE__).'/../privkey.pem',
+            ],
+            [
                 'AOESP_SHA1_CONTENT',
-                dirname(__FILE__) . '/../oaep_sha1-content-res.xml',
-                dirname(__FILE__) . "/../privkey.pem"
-            )
-        );
+                dirname(__FILE__).'/../oaep_sha1-content-res.xml',
+                dirname(__FILE__).'/../privkey.pem',
+            ],
+        ];
     }
 
     /**
-     *
      * @@dataProvider decryptFilesProvider
+     *
      * @throws \Exception
      */
     public function testDecrypt($testName, $testFile, $privKey)
@@ -147,12 +144,12 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
 
         $objenc  = new XMLSecEnc();
         $encData = $objenc->locateEncryptedData($doc);
-        $this->assertInstanceOf('\\DOMElement', $encData, "Cannot locate Encrypted Data");
+        $this->assertInstanceOf('\\DOMElement', $encData, 'Cannot locate Encrypted Data');
 
         $objenc->setNode($encData);
-        $objenc->type = $encData->getAttribute("Type");
+        $objenc->type = $encData->getAttribute('Type');
         $objKey       = $objenc->locateKey();
-        $this->assertInstanceOf('\\XmlSecLibs\\XMLSecurityKey', $objKey, "We know the secret key, but not the algorithm");
+        $this->assertInstanceOf('\\XmlSecLibs\\XMLSecurityKey', $objKey, 'We know the secret key, but not the algorithm');
 
         $key = null;
 
@@ -164,10 +161,10 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        if (!$objKey->key && empty( $key )) {
+        if (!$objKey->key && empty($key)) {
             $objKeyInfo->loadKey($privKey, true);
         }
-        if (empty( $objKey->key )) {
+        if (empty($objKey->key)) {
             $objKey->loadKey($key);
         }
 
@@ -178,17 +175,15 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
             if ($decrypt instanceof \DOMNode) {
                 if ($decrypt instanceof \DOMDocument) {
                     $output = $decrypt->saveXML();
-                }
-                else {
+                } else {
                     $output = $decrypt->ownerDocument->saveXML();
                 }
-            }
-            else {
+            } else {
                 $output = $decrypt;
             }
         }
 
-        $outfile = dirname(__FILE__) . "/../basic-doc.xml";
+        $outfile = dirname(__FILE__).'/../basic-doc.xml';
         $res     = null;
         $this->assertFileExists($outfile);
 
@@ -203,26 +198,25 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
      */
     public function encryptProvider()
     {
-        return array(
-            array(XMLSecEnc::Element, 'EncryptedData'),
-            array(XMLSecEnc::Content, 'Root')
-        );
+        return [
+            [XMLSecEnc::Element, 'EncryptedData'],
+            [XMLSecEnc::Content, 'Root'],
+        ];
     }
 
     /**
      * @dataProvider encryptProvider
-     *
      */
     public function testEncrypt($encType, $rootLocalName)
     {
         $dom = new \DOMDocument();
-        $dom->load(dirname(__FILE__) . '/../basic-doc.xml');
+        $dom->load(dirname(__FILE__).'/../basic-doc.xml');
 
         $objKey = new XMLSecurityKey(XMLSecurityKey::AES256_CBC);
         $objKey->generateSessionKey();
 
-        $siteKey = new XMLSecurityKey(XMLSecurityKey::RSA_OAEP_MGF1P, array('type' => 'public'));
-        $siteKey->loadKey(dirname(__FILE__) . '/../mycert.pem', true, true);
+        $siteKey = new XMLSecurityKey(XMLSecurityKey::RSA_OAEP_MGF1P, ['type' => 'public']);
+        $siteKey->loadKey(dirname(__FILE__).'/../mycert.pem', true, true);
 
         $enc = new XMLSecEnc();
         $enc->setNode($dom->documentElement);
@@ -232,7 +226,7 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
         $enc->encryptNode($objKey);
 
         $root = $dom->documentElement;
-        $this->assertEquals($rootLocalName, $root->localName, "Failed to encrypt data");
+        $this->assertEquals($rootLocalName, $root->localName, 'Failed to encrypt data');
     }
 
     /**
@@ -241,15 +235,15 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
     public function testEncryptNoReplace()
     {
         $dom = new \DOMDocument();
-        $dom->load(dirname(__FILE__) . '/../basic-doc.xml');
+        $dom->load(dirname(__FILE__).'/../basic-doc.xml');
 
         $origData = $dom->saveXML();
 
         $objKey = new XMLSecurityKey(XMLSecurityKey::AES256_CBC);
         $objKey->generateSessionKey();
 
-        $siteKey = new XMLSecurityKey(XMLSecurityKey::RSA_OAEP_MGF1P, array('type' => 'public'));
-        $siteKey->loadKey(dirname(__FILE__) . '/../mycert.pem', true, true);
+        $siteKey = new XMLSecurityKey(XMLSecurityKey::RSA_OAEP_MGF1P, ['type' => 'public']);
+        $siteKey->loadKey(dirname(__FILE__).'/../mycert.pem', true, true);
 
         $enc = new XMLSecEnc();
         $enc->setNode($dom->documentElement);
@@ -259,7 +253,7 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
         $encNode   = $enc->encryptNode($objKey, false);
 
         $newData = $dom->saveXML();
-        $this->assertEquals($origData, $newData, "Original data was modified");
+        $this->assertEquals($origData, $newData, 'Original data was modified');
         $this->assertFalse(
             $encNode->namespaceURI !== XMLSecEnc::XMLENCNS || $encNode->localName !== 'EncryptedData',
             "Encrypted node wasn't a <xenc:EncryptedData>-element"
@@ -271,11 +265,11 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
      */
     public function verifyProvider()
     {
-        return array(
+        return [
             /* [$testName, $testFile] */
-            array('SIGN_TEST', dirname(__FILE__) . '/../sign-basic-test.xml'),
+            ['SIGN_TEST', dirname(__FILE__).'/../sign-basic-test.xml'],
             // ['SIGN_TEST_RSA_SHA256', dirname(__FILE__) . '/../sign-sha256-rsa-sha256-test.xml'] // There is no such file in tests folder
-        );
+        ];
     }
 
     /**
@@ -292,25 +286,25 @@ class XmlSecEncTest extends \PHPUnit_Framework_TestCase
         $objXMLSecDSig = new XMLSecurityDSig();
 
         $objDSig = $objXMLSecDSig->locateSignature($doc);
-        $this->assertInstanceOf('\\DOMElement', $objDSig, "Cannot locate Signature Node");
+        $this->assertInstanceOf('\\DOMElement', $objDSig, 'Cannot locate Signature Node');
 
         $objXMLSecDSig->canonicalizeSignedInfo();
-        $objXMLSecDSig->idKeys = array('wsu:Id');
-        $objXMLSecDSig->idNS   = array('wsu' => 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd');
+        $objXMLSecDSig->idKeys = ['wsu:Id'];
+        $objXMLSecDSig->idNS   = ['wsu' => 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'];
 
         $retVal = $objXMLSecDSig->validateReference();
 
-        $this->assertTrue($retVal, "Reference Validation Failed");
+        $this->assertTrue($retVal, 'Reference Validation Failed');
 
         $objKey = $objXMLSecDSig->locateKey();
-        $this->assertInstanceOf('\\XmlSecLibs\\XMLSecurityKey', $objKey, "We have no idea about the key");
+        $this->assertInstanceOf('\\XmlSecLibs\\XMLSecurityKey', $objKey, 'We have no idea about the key');
 
         $key = null;
 
         $objKeyInfo = XMLSecEnc::staticLocateKeyInfo($objKey, $objDSig);
 
-        if (!$objKeyInfo->key && empty( $key )) {
-            $objKey->loadKey(dirname(__FILE__) . '/../mycert.pem', true);
+        if (!$objKeyInfo->key && empty($key)) {
+            $objKey->loadKey(dirname(__FILE__).'/../mycert.pem', true);
         }
 
         $this->assertEquals(1, $objXMLSecDSig->verify($objKey), "$testName: Signature is invalid");
