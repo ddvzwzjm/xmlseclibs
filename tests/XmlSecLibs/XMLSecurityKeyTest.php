@@ -1,4 +1,5 @@
 <?php
+
 namespace XmlSecLibs;
 
 class XMLSecurityKeyTest extends \PHPUnit_Framework_TestCase
@@ -6,23 +7,23 @@ class XMLSecurityKeyTest extends \PHPUnit_Framework_TestCase
     public function testGenerateSessionKeyBasics()
     {
         $key = new XMLSecurityKey(XMLSecurityKey::TRIPLEDES_CBC);
-        $k   = $key->generateSessionKey();
-        $this->assertEquals($key->key, $k, "Return value does not match generated key.");
+        $k = $key->generateSessionKey();
+        $this->assertEquals($key->key, $k, 'Return value does not match generated key.');
 
-        $keysizes = array(
+        $keysizes = [
             XMLSecurityKey::TRIPLEDES_CBC => 24,
             XMLSecurityKey::AES128_CBC    => 16,
             XMLSecurityKey::AES192_CBC    => 24,
             XMLSecurityKey::AES256_CBC    => 32,
-        );
+        ];
 
         foreach ($keysizes as $type => $keysize) {
             $key = new XMLSecurityKey($type);
-            $k   = $key->generateSessionKey();
+            $k = $key->generateSessionKey();
             $this->assertEquals(
                 $keysize,
                 strlen($k),
-                sprintf("Invalid keysize for key type %s. Was %d, should have been %d.", $type, strlen($k), $keysize)
+                sprintf('Invalid keysize for key type %s. Was %d, should have been %d.', $type, strlen($k), $keysize)
             );
         }
     }
@@ -32,10 +33,10 @@ class XMLSecurityKeyTest extends \PHPUnit_Framework_TestCase
         /* Run the test several times, to increase the chance of detecting an error. */
         for ($t = 0; $t < 16; $t++) {
             $key = new XMLSecurityKey(XMLSecurityKey::TRIPLEDES_CBC);
-            $k   = $key->generateSessionKey();
+            $k = $key->generateSessionKey();
 
             for ($i = 0; $i < strlen($k); $i++) {
-                $byte   = ord($k[ $i ]);
+                $byte = ord($k[ $i ]);
                 $parity = 0;
                 while ($byte !== 0) {
                     $parity ^= $byte & 1;
@@ -48,12 +49,12 @@ class XMLSecurityKeyTest extends \PHPUnit_Framework_TestCase
 
     public function symmetricKeySizeProvider()
     {
-        return array(
-            array(XMLSecurityKey::TRIPLEDES_CBC, 24),
-            array(XMLSecurityKey::AES128_CBC, 16),
-            array(XMLSecurityKey::AES192_CBC, 24),
-            array(XMLSecurityKey::AES256_CBC, 32)
-        );
+        return [
+            [XMLSecurityKey::TRIPLEDES_CBC, 24],
+            [XMLSecurityKey::AES128_CBC, 16],
+            [XMLSecurityKey::AES192_CBC, 24],
+            [XMLSecurityKey::AES256_CBC, 32],
+        ];
     }
 
     /**
@@ -61,19 +62,19 @@ class XMLSecurityKeyTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSymmetricKeySize($keyType, $keySize)
     {
-        $key  = new XMLSecurityKey($keyType);
+        $key = new XMLSecurityKey($keyType);
         $size = $key->getSymmetricKeySize();
         $this->assertEquals(
             $keySize,
             $size,
-            sprintf("Invalid keysize for key type %s. Was %d, should have been %d.", $keyType, $size, $keySize)
+            sprintf('Invalid keysize for key type %s. Was %d, should have been %d.', $keyType, $size, $keySize)
         );
     }
 
     public function testThumbPrint()
     {
-        $siteKey = new XMLSecurityKey(XMLSecurityKey::RSA_OAEP_MGF1P, array('type' => 'public'));
-        $siteKey->loadKey(dirname(__FILE__) . '/../mycert.pem', true, true);
+        $siteKey = new XMLSecurityKey(XMLSecurityKey::RSA_OAEP_MGF1P, ['type' => 'public']);
+        $siteKey->loadKey(dirname(__FILE__).'/../mycert.pem', true, true);
 
         $thumbprint = $siteKey->getX509Thumbprint();
         $this->assertEquals('8b600d9155e8e8dfa3c10998f736be086e83ef3b', $thumbprint, "Thumbprint doesn't match");
